@@ -2,6 +2,12 @@
 
 基于 **Cloudflare Workers + Cloudflare KV** 的轻量级网页挪车通知系统，支持上传现场照片、企业微信 / Bark 推送、车主多条记录选择回复、历史记录分页查看，以及在特定未回复条件下自动解锁拨号按钮。
 
+## 🧪 本地 / GitHub Pages 模拟测试
+
+`index.html` 提供了纯前端模拟测试页，可在无后端环境下体验申请提交、记录展示、等待页操作与电话按钮解锁逻辑。
+
+- **在线模拟测试页**：[点击打开 GitHub Pages 模拟测试页](https://greenwave1987.github.io/movecar)
+- 
 ## ✨ 核心功能
 
 - **现场照片与留言通知**：提交挪车申请时必须上传现场照片（支持移动端相机拍摄或相册选择），可选填留言或快捷标签，实时写入当日 KV 记录（默认 24 小时过期）。
@@ -24,9 +30,3 @@
    - `PHONE_NUMBER`：车主联系电话（用于 `tel:` 拨号按钮）
    - `WECOM_CORPID`、`WECOM_APP_SECRET`、`WECOM_AGENTID`、`WECOM_TOUSER`（可选，默认 `@all`，多用户用 `&` 分隔）
    - `BARK_URL`（可选，Bark 推送服务地址）
-
-## 🧪 本地 / GitHub Pages 模拟测试
-
-`index.html` 提供了纯前端模拟测试页，可在无后端环境下体验申请提交、记录展示、等待页操作与电话按钮解锁逻辑。
-
-- **在线模拟测试页**：[点击打开 GitHub Pages 模拟测试页](https://greenwave1987.github.io/movecar)
