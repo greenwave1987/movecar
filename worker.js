@@ -19,6 +19,19 @@ function getBeijingDateStr() {
   return `${year}-${month}-${day}`;
 }
 
+// 获取企业微信接收人 touser，未设置默认 @all，支持多用户用 & 隔开
+function getWeComToUser() {
+  if (typeof WECOM_TOUSER !== 'undefined' && WECOM_TOUSER) {
+    const cleaned = String(WECOM_TOUSER)
+      .split('&')
+      .map(s => s.trim())
+      .filter(Boolean)
+      .join('&');
+    if (cleaned) return cleaned;
+  }
+  return '@all';
+}
+
 async function handleRequest(request) {
   const url = new URL(request.url)
   const path = url.pathname
@@ -91,7 +104,7 @@ async function sendWeComMessage(message, confirmUrl) {
 ${confirmUrl}`;
 
     const textBody = {
-      touser: "yxl",
+      touser: getWeComToUser(),
       msgtype: "text",
       agentid: WECOM_AGENTID,
       text: { content: textContent },
@@ -567,7 +580,7 @@ function renderMainPage(origin) {
       let selectedPhotoFile = null;
       let retryCount = 0;
       let allRecords = [];
-      let visibleLimit = 3; // 默认展示3条
+      let visibleLimit = 3;
 
       window.onload = () => {
         loadTodayRecords();
@@ -896,7 +909,7 @@ function renderOwnerPage() {
       let records = [];
       let selectedRecordId = null;
       let selectedReply = '抱歉挡了您的道，车主正飞奔而来，请稍后！';
-      let ownerVisibleLimit = 3; // 车主端默认展示3条记录
+      let ownerVisibleLimit = 3;
 
       window.onload = async () => {
         await loadRecords();
