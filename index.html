@@ -7,7 +7,239 @@
   <title>MoveCar 模拟测试页（GitHub Pages）</title>
   <style>
     :root {
+      --sat: env(safe-area-inset-top, 0px);<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <meta name="theme-color" content="#0093E9" />
+  <title>通知车主挪车 - 模拟测试页</title>
+  <style>
+    :root {
       --sat: env(safe-area-inset-top, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      padding: clamp(16px, 4vw, 24px);
+      padding-top: calc(clamp(16px, 4vw, 24px) + var(--sat));
+      padding-bottom: calc(clamp(16px, 4vw, 24px) + var(--sab));
+      padding-left: calc(clamp(16px, 4vw, 24px) + var(--sal));
+      padding-right: calc(clamp(16px, 4vw, 24px) + var(--sar));
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 3vw, 20px);
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: clamp(20px, 5vw, 28px);
+      padding: clamp(18px, 4vw, 28px);
+      box-shadow: 0 10px 40px rgba(0, 147, 233, 0.2);
+    }
+    .header {
+      text-align: center;
+      padding: clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px);
+      background: white;
+    }
+    .icon-wrap {
+      width: clamp(72px, 18vw, 100px);
+      height: clamp(72px, 18vw, 100px);
+      background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
+      border-radius: clamp(22px, 5vw, 32px);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto clamp(14px, 3vw, 24px);
+      box-shadow: 0 12px 32px rgba(0, 147, 233, 0.35);
+    }
+    .icon-wrap span { font-size: clamp(36px, 9vw, 52px); }
+    .header h1 {
+      font-size: clamp(22px, 5.5vw, 30px);
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 6px;
+    }
+    .header p {
+      font-size: clamp(13px, 3.5vw, 16px);
+      color: #718096;
+      font-weight: 500;
+    }
+    .input-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+    .input-card textarea {
+      width: 100%;
+      min-height: clamp(90px, 20vw, 120px);
+      border: none;
+      padding: clamp(16px, 4vw, 24px);
+      font-size: clamp(15px, 4vw, 18px);
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      color: #2d3748;
+      background: transparent;
+      line-height: 1.5;
+    }
+    .input-card textarea::placeholder { color: #a0aec0; }
+    .photo-upload-wrap {
+      padding: 0 clamp(16px, 4vw, 24px) clamp(16px, 4vw, 24px);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .photo-btn {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px dashed #38bdf8;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #photoInput { display: none; }
+    .photo-preview-text {
+      font-size: 13px;
+      color: #e11d48;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tags {
+      display: flex;
+      gap: clamp(6px, 2vw, 10px);
+      padding: 0 clamp(12px, 3vw, 20px) clamp(14px, 3vw, 20px);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tags::-webkit-scrollbar { display: none; }
+    .tag {
+      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+      color: #00796b;
+      padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 18px);
+      border-radius: 20px;
+      font-size: clamp(13px, 3.5vw, 15px);
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      border: 1px solid #80cbc4;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    .btn-main {
+      background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
+      color: white;
+      border: none;
+      padding: clamp(16px, 4vw, 22px);
+      border-radius: clamp(16px, 4vw, 22px);
+      font-size: clamp(16px, 4.2vw, 20px);
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 147, 233, 0.35);
+      min-height: 56px;
+    }
+    .toast {
+      position: fixed;
+      top: calc(20px + var(--sat));
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: white;
+      padding: clamp(12px, 3vw, 16px) clamp(20px, 5vw, 32px);
+      border-radius: 16px;
+      font-size: clamp(14px, 3.5vw, 16px);
+      font-weight: 600;
+      color: #e11d48;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      opacity: 0;
+      transition: all 0.35s ease;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #successView { display: none; }
+    .success-card {
+      text-align: center;
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border: 2px solid #28a745;
+    }
+    .success-icon { font-size: clamp(56px, 14vw, 80px); margin-bottom: 12px; display: block; }
+    .success-card h2 { color: #155724; margin-bottom: 8px; font-size: clamp(20px, 5vw, 28px); }
+    .success-card p { color: #1e7e34; font-size: clamp(14px, 3.5vw, 16px); }
+    .waiting-tip {
+      margin-top: 10px;
+      font-size: 12px !important;
+      color: #166534 !important;
+      opacity: 0.9;
+      line-height: 1.45;
+    }
+    .history-card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 18px; }
+    .history-card h3 { font-size: 16px; color: #1e293b; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item { background: #f8fafc; border-radius: 12px; padding: 10px 12px; font-size: 13px; border-left: 3px solid #0093E9; display: flex; gap: 10px; align-items: center; }
+    .history-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
+    .history-info { flex: 1; min-width: 0; }
+    .history-time { color: #64748b; font-size: 11px; margin-bottom: 2px; }
+    .history-msg { color: #334155; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-reply { color: #0284c7; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-empty { text-align: center; color: #94a3b8; font-size: 13px; padding: 10px 0; }
+    .load-more-btn {
+      width: 100%; margin-top: 12px; padding: 10px; border-radius: 12px;
+      background: #f1f5f9; color: #0284c7; border: 1px dashed #38bdf8;
+      font-size: 13px; font-weight: 600; cursor: pointer; display: none;
+      align-items: center; justify-content: center; gap: 4px;
+    }
+    .action-card { display: flex; flex-direction: column; gap: 10px; }
+    .action-hint { text-align: center; font-size: 13px; color: #718096; display: none; }
+    .action-hint.show { display: block; }
+    .btn-retry, .btn-phone, .btn-back {
+      color: white; border: none; padding: 14px; border-radius: 14px;
+      font-size: 16px; font-weight: 700; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+    }
+    .btn-retry { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .btn-back { background: #64748b; font-size: 15px; padding: 12px; }
+    .btn-phone { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); display: none; }
+    .btn-phone.show { display: flex; }
+  </style>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <div class="container" id="mainView">
+    <div class="card header">
+      <div class="icon-wrap"><span>🚗</span></div>
+      <h1>呼叫车主挪车</h1>
+      <p>Notify Car Owner (Demo)</p>
+    </div>
+
+    <div class="card input-card">
+      <textarea id="msgInput" placeholder="输入留言给车主...（可选）"></textarea>
+      <div class="photo-upload-wrap">
+        <button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()">
+          <span>📷</span> <span>拍摄/上传现场照片 *</span>
+        </button>
+        <input type="file" id="photoInput" accept="image/*" capture="environment" onchange="handlePhotoSelect(this)" />
+        <span id="photoFileName" class="photo-preview-text">⚠️ 必须上传照片</span>
+      </div>
+      <div class="tags">
+        <div class="tag" onclick="addTag('您的车挡住我了')">🚧 挡路</div>
+        <div class="tag" onclick="addTag('临时停靠一下')">⏱️ 临停
       --sar: env(safe-area-inset-right, 0px);
       --sab: env(safe-area-inset-bottom, 0px);
       --sal: env(safe-area-inset-left, 0px);
