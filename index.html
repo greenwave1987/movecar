@@ -14,12 +14,11 @@
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
     html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-    html, body { height: 100%; }
+    html, body { min-height: 100%; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
       min-height: 100vh;
-      min-height: -webkit-fill-available;
       padding: clamp(16px, 4vw, 24px);
       padding-top: calc(clamp(16px, 4vw, 24px) + var(--sat));
       padding-bottom: calc(clamp(16px, 4vw, 24px) + var(--sab));
@@ -67,6 +66,28 @@
       font-size: clamp(13px, 3.5vw, 16px);
       color: #718096;
       font-weight: 500;
+    }
+    .mode-switch-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .mode-btn.active {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0369a1;
     }
     .input-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
     .input-card textarea {
@@ -163,7 +184,7 @@
       z-index: 100;
     }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #successView { display: none; }
+    #successView, #ownerSimView { display: none; }
     .success-card {
       text-align: center;
       background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
@@ -183,25 +204,6 @@
     .owner-card.hidden { display: none; }
     .owner-card h3 { color: #0093E9; margin-bottom: 6px; font-size: clamp(20px, 5vw, 26px); }
     .owner-card p { color: #475569; font-size: clamp(14px, 3.8vw, 16px); line-height: 1.4; padding: 0 8px; }
-    .sim-owner-box {
-      margin-top: 14px;
-      padding-top: 12px;
-      border-top: 1px dashed #cbd5e1;
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-    }
-    .sim-btn {
-      flex: 1;
-      padding: 8px 6px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-    }
     .history-card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 18px; }
     .history-card h3 { font-size: 16px; color: #1e293b; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
     .history-list { display: flex; flex-direction: column; gap: 10px; }
@@ -221,7 +223,7 @@
     .action-card { display: flex; flex-direction: column; gap: 10px; }
     .action-hint { text-align: center; font-size: 13px; color: #718096; display: none; }
     .action-hint.show { display: block; }
-    .btn-retry, .btn-phone, .btn-back {
+    .btn-retry, .btn-phone, .btn-back, .btn-owner-confirm {
       color: white; border: none; padding: 14px; border-radius: 14px;
       font-size: 16px; font-weight: 700; cursor: pointer; display: flex;
       align-items: center; justify-content: center; gap: 8px; text-decoration: none;
@@ -230,6 +232,27 @@
     .btn-back { background: #64748b; font-size: 15px; padding: 12px; }
     .btn-phone { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); display: none; }
     .btn-phone.show { display: flex; }
+    .btn-owner-confirm { background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: 100%; }
+
+    .section-title { font-size: 13px; font-weight: 700; color: #475569; text-align: left; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+    .record-selector { display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 12px; }
+    .rec-item { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .rec-item.selected { background: #eef2ff; border-color: #6366f1; }
+    .rec-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
+    .rec-meta { flex: 1; min-width: 0; }
+    .rec-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 2px; }
+    .rec-time { color: #64748b; font-weight: 600; }
+    .rec-badge { font-size: 11px; padding: 1px 6px; border-radius: 6px; font-weight: 600; }
+    .badge-wait { background: #fef3c7; color: #b45309; }
+    .badge-done { background: #d1fae5; color: #065f46; }
+    .rec-msg { font-size: 13px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .message-box { background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: left; font-size: 14px; color: #475569; border-left: 4px solid #667eea; }
+    .photo-box { margin-bottom: 14px; border-radius: 12px; overflow: hidden; display: none; border: 1px solid #e2e8f0; }
+    .photo-box.show { display: block; }
+    .photo-box img { width: 100%; height: auto; display: block; max-height: 220px; object-fit: cover; }
+    .quick-replies { display: flex; gap: 8px; margin-bottom: 14px; }
+    .qr-btn { flex: 1; padding: 10px 4px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; }
+    .qr-btn.active { background: #e0e7ff; border-color: #6366f1; color: #4f46e5; }
   </style>
 </head>
 <body>
@@ -240,6 +263,11 @@
       <div class="icon-wrap"><span>🚗</span></div>
       <h1>呼叫车主挪车</h1>
       <p>Notify Car Owner (Demo)</p>
+      <div class="mode-switch-bar">
+        <button type="button" class="mode-btn active" onclick="switchView('main')">申请页</button>
+        <button type="button" class="mode-btn" onclick="switchView('owner')">模拟车主页 (owner-confirm)</button>
+        <button type="button" class="mode-btn" onclick="clearDemoRecords()">清空模拟记录</button>
+      </div>
     </div>
 
     <div class="card input-card">
@@ -283,12 +311,7 @@
       <span class="success-icon">⏳</span>
       <h2>通知已发送！</h2>
       <p>正在等待车主回应...</p>
-      <p class="waiting-tip">若页面长时间未变化，请稍后刷新查看申请页记录！</p>
-      <div class="sim-owner-box">
-        <button type="button" class="sim-btn" onclick="simulateOwnerReply('抱歉挡了您的道，车主正飞奔而来，请稍后！')">模拟：马上</button>
-        <button type="button" class="sim-btn" onclick="simulateOwnerReply('你拍的照片看不清我挡了您的道，请换个角度再拍一张！')">模拟：重拍</button>
-        <button type="button" class="sim-btn" onclick="simulateOwnerReply('我确定没挡您的道，不要联系我，另寻他法，抱歉！')">模拟：拒绝</button>
-      </div>
+      <p class="waiting-tip">若页面长时间未变化，可点击下方“模拟车主页”进行回复测试。</p>
     </div>
 
     <div id="ownerFeedback" class="card owner-card hidden">
@@ -306,6 +329,9 @@
       <button id="backMainBtn" class="btn-back" onclick="backToMainView()">
         <span>← 返回申请页</span>
       </button>
+      <button type="button" class="btn-back" style="background:#4f46e5" onclick="switchView('owner')">
+        <span>🚗 打开模拟车主页 (owner-confirm)</span>
+      </button>
       <a id="phoneBtn" href="tel:13800138000" class="btn-phone" onclick="showToast('模拟拨打车主电话: 13800138000'); return false;">
         <span>📞</span>
         <span>直接打电话</span>
@@ -313,18 +339,104 @@
     </div>
   </div>
 
+  <div class="container" id="ownerSimView">
+    <div class="card">
+      <div class="header" style="padding: 8px 0 16px;">
+        <span style="font-size:40px;display:block;margin-bottom:6px;">🚗</span>
+        <h1 style="font-size:22px;">模拟车主页 (owner-confirm)</h1>
+        <p style="font-size:13px;">选择当日申请并发送模拟回复</p>
+      </div>
+
+      <div class="section-title">
+        <span>📋 当日申请记录</span>
+        <span id="ownerRecCount">0 条</span>
+      </div>
+      <div id="ownerRecordSelector" class="record-selector"></div>
+
+      <div id="ownerDetailPanel" style="display:none;">
+        <div class="message-box">
+          💬 <b>当前选中留言：</b><span id="ownerDetailMsg">无</span>
+        </div>
+        <div id="ownerPhotoBox" class="photo-box">
+          <img id="ownerDetailPhoto" src="" alt="现场照片" />
+        </div>
+        <div class="quick-replies">
+          <button type="button" class="qr-btn active" onclick="setOwnerReply(this, '抱歉挡了您的道，车主正飞奔而来，请稍后！')">🏃 马上</button>
+          <button type="button" class="qr-btn" onclick="setOwnerReply(this, '你拍的照片看不清我挡了您的道，请换个角度再拍一张！')">📷 重拍</button>
+          <button type="button" class="qr-btn" onclick="setOwnerReply(this, '我确定没挡您的道，不要联系我，另寻他法，抱歉！')">❌ 拒绝</button>
+        </div>
+        <button type="button" class="btn-owner-confirm" onclick="submitOwnerReply()">
+          <span>🚀 对选中申请发送回复</span>
+        </button>
+      </div>
+
+      <button type="button" class="btn-back" style="width:100%;margin-top:12px;" onclick="switchView('main')">
+        <span>← 返回申请页</span>
+      </button>
+    </div>
+  </div>
+
   <script>
+    const STORAGE_KEY = 'movecar_demo_records_v1';
     const SAMPLE_PHOTO = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="#dbeafe"/><text x="40" y="46" font-size="24" text-anchor="middle">🚗</text></svg>');
     let selectedPhotoFile = null;
     let selectedPhotoDataUrl = SAMPLE_PHOTO;
     let retryCount = 0;
     let visibleLimit = 3;
-    let records = [];
+    let records = loadStoredRecords();
+    let selectedOwnerRecordId = records[0] ? records[0].id : null;
+    let selectedOwnerReply = '抱歉挡了您的道，车主正飞奔而来，请稍后！';
+
+    function loadStoredRecords() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveStoredRecords() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch (e) {}
+    }
 
     window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const viewParam = params.get('view') || (window.location.pathname.endsWith('/owner-confirm') ? 'owner' : 'main');
       renderRecords();
+      renderOwnerView();
       evaluatePhoneEscalation();
+      switchView(viewParam);
     };
+
+    function switchView(viewName) {
+      document.getElementById('mainView').style.display = 'none';
+      document.getElementById('successView').style.display = 'none';
+      document.getElementById('ownerSimView').style.display = 'none';
+
+      if (viewName === 'owner') {
+        renderOwnerView();
+        document.getElementById('ownerSimView').style.display = 'flex';
+      } else {
+        renderRecords();
+        evaluatePhoneEscalation();
+        document.getElementById('mainView').style.display = 'flex';
+      }
+    }
+
+    function clearDemoRecords() {
+      records = [];
+      selectedOwnerRecordId = null;
+      retryCount = 0;
+      saveStoredRecords();
+      document.getElementById('actionHint').classList.remove('show');
+      document.getElementById('phoneBtn').classList.remove('show');
+      renderRecords();
+      renderOwnerView();
+      showToast('🗑️ 已清空模拟记录');
+    }
 
     function shouldUnlockPhoneButton(list) {
       if (!Array.isArray(list) || list.length < 3) return false;
@@ -375,8 +487,7 @@
       const nowMs = Date.now();
       const timeStr = new Date(nowMs).toLocaleTimeString('zh-CN', { hour12: false });
       const msg = document.getElementById('msgInput').value.trim() || '无留言';
-
-      records.unshift({
+      const newRec = {
         id: `${nowMs}_${Math.random().toString(36).slice(2, 7)}`,
         createdAt: nowMs,
         time: timeStr,
@@ -384,42 +495,107 @@
         photo: selectedPhotoDataUrl,
         status: 'waiting',
         reply: '等待车主回应...'
-      });
+      };
+
+      records.unshift(newRec);
+      selectedOwnerRecordId = newRec.id;
+      saveStoredRecords();
 
       document.getElementById('waitingCard').style.display = 'block';
       document.getElementById('ownerFeedback').classList.add('hidden');
 
       renderRecords();
+      renderOwnerView();
       evaluatePhoneEscalation();
       showToast('✅ 发送成功（模拟）！');
       document.getElementById('mainView').style.display = 'none';
       document.getElementById('successView').style.display = 'flex';
     }
 
-    function simulateOwnerReply(replyText) {
-      if (records.length > 0) {
-        records[0].status = 'confirmed';
-        records[0].reply = replyText;
-      }
-      document.getElementById('waitingCard').style.display = 'none';
-      document.getElementById('ownerReplyText').innerText = replyText;
+    function renderOwnerView() {
+      const selectorEl = document.getElementById('ownerRecordSelector');
+      const detailPanel = document.getElementById('ownerDetailPanel');
+      document.getElementById('ownerRecCount').innerText = records.length + ' 条';
 
+      if (records.length === 0) {
+        selectorEl.innerHTML = '<div class="history-empty">暂无模拟申请记录，请先在申请页提交</div>';
+        detailPanel.style.display = 'none';
+        return;
+      }
+
+      if (!selectedOwnerRecordId || !records.some(r => r.id === selectedOwnerRecordId)) {
+        selectedOwnerRecordId = records[0].id;
+      }
+
+      detailPanel.style.display = 'block';
+      selectorEl.innerHTML = records.map(r => {
+        const isSelected = r.id === selectedOwnerRecordId;
+        const isDone = r.status === 'confirmed';
+        return `
+          <div class="rec-item ${isSelected ? 'selected' : ''}" onclick="selectOwnerRecord('${r.id}')">
+            <img src="${r.photo}" class="rec-thumb" alt="照片" />
+            <div class="rec-meta">
+              <div class="rec-top">
+                <span class="rec-time">⏱️ ${r.time}</span>
+                <span class="rec-badge ${isDone ? 'badge-done' : 'badge-wait'}">${isDone ? '已回复' : '待回复'}</span>
+              </div>
+              <div class="rec-msg">💬 ${escapeHtml(r.message)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const cur = records.find(r => r.id === selectedOwnerRecordId);
+      if (cur) {
+        document.getElementById('ownerDetailMsg').innerText = cur.message;
+        const photoBox = document.getElementById('ownerPhotoBox');
+        const imgEl = document.getElementById('ownerDetailPhoto');
+        if (cur.photo) {
+          imgEl.src = cur.photo;
+          photoBox.classList.add('show');
+        } else {
+          photoBox.classList.remove('show');
+        }
+      }
+    }
+
+    function selectOwnerRecord(id) {
+      selectedOwnerRecordId = id;
+      renderOwnerView();
+    }
+
+    function setOwnerReply(btn, text) {
+      document.querySelectorAll('.qr-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedOwnerReply = text;
+    }
+
+    function submitOwnerReply() {
+      const idx = records.findIndex(r => r.id === selectedOwnerRecordId);
+      if (idx === -1) return;
+
+      records[idx].status = 'confirmed';
+      records[idx].reply = selectedOwnerReply;
+      saveStoredRecords();
+      renderOwnerView();
+      renderRecords();
+
+      document.getElementById('waitingCard').style.display = 'none';
+      document.getElementById('ownerReplyText').innerText = selectedOwnerReply;
       const emojiEl = document.getElementById('replyEmoji');
       const titleEl = document.getElementById('replyTitle');
-      if (replyText.includes('飞奔而来')) {
+      if (selectedOwnerReply.includes('飞奔而来')) {
         emojiEl.innerText = '🏃‍♂️';
         titleEl.innerText = '车主正飞奔赶来';
-      } else if (replyText.includes('换个角度')) {
+      } else if (selectedOwnerReply.includes('换个角度')) {
         emojiEl.innerText = '📷';
         titleEl.innerText = '请重新拍摄现场照片';
       } else {
         emojiEl.innerText = '🛑';
         titleEl.innerText = '车主反馈未挡道';
       }
-
       document.getElementById('ownerFeedback').classList.remove('hidden');
-      renderRecords();
-      showToast('📩 已模拟车主回复');
+      showToast('✅ 已发送模拟回复');
     }
 
     function handleRetryClick() {
