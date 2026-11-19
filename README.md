@@ -26,7 +26,7 @@
 
 1. 在 Cloudflare Dashboard 创建 **KV Namespace**，并在 Worker 绑定中命名为 `MOVE_CAR_STATUS`。
 2. 将 `movecar.js` 部署到 Cloudflare Worker。
-3. 可选配置环境变量 / Secrets：
-   - `PHONE_NUMBER`：车主联系电话（用于 `tel:` 拨号按钮）
-   - `WECOM_CORPID`、`WECOM_APP_SECRET`、`WECOM_AGENTID`、`WECOM_TOUSER`（可选，默认 `@all`，多用户用 `&` 分隔）
-   - `BARK_URL`（可选，Bark 推送服务地址）
+3. - 可选配置环境变量 / Secrets：
+  - `PHONE_NUMBER`：车主联系电话（用于 `tel:` 拨号按钮；**若仅设置了 `PHONE_NUMBER` 而未配置通知通道，申请页会直接显示“电话联系车主”按钮**）
+  - `QYWX_AM`：企业微信应用配置，格式为 `corpid,corpsecret,agentid,touser`（逗号分隔；`touser` 可选，默认 `@all`，多用户用 `&` 分隔，例如 `ww123,secret123,1000002,user1&user2`）
+  - `BARK_URL`（可选，Bark 推送服务地址）
