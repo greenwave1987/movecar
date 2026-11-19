@@ -179,6 +179,29 @@
       opacity: 0.9;
       line-height: 1.45;
     }
+    .owner-card { background: white; border: 2px solid #80D0C7; text-align: center; }
+    .owner-card.hidden { display: none; }
+    .owner-card h3 { color: #0093E9; margin-bottom: 6px; font-size: clamp(20px, 5vw, 26px); }
+    .owner-card p { color: #475569; font-size: clamp(14px, 3.8vw, 16px); line-height: 1.4; padding: 0 8px; }
+    .sim-owner-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #cbd5e1;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    .sim-btn {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
     .history-card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 18px; }
     .history-card h3 { font-size: 16px; color: #1e293b; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
     .history-list { display: flex; flex-direction: column; gap: 10px; }
@@ -261,6 +284,17 @@
       <h2>通知已发送！</h2>
       <p>正在等待车主回应...</p>
       <p class="waiting-tip">若页面长时间未变化，请稍后刷新查看申请页记录！</p>
+      <div class="sim-owner-box">
+        <button type="button" class="sim-btn" onclick="simulateOwnerReply('抱歉挡了您的道，车主正飞奔而来，请稍后！')">模拟：马上</button>
+        <button type="button" class="sim-btn" onclick="simulateOwnerReply('你拍的照片看不清我挡了您的道，请换个角度再拍一张！')">模拟：重拍</button>
+        <button type="button" class="sim-btn" onclick="simulateOwnerReply('我确定没挡您的道，不要联系我，另寻他法，抱歉！')">模拟：拒绝</button>
+      </div>
+    </div>
+
+    <div id="ownerFeedback" class="card owner-card hidden">
+      <span id="replyEmoji" style="font-size:56px; display:block; margin-bottom:10px">🏃‍♂️</span>
+      <h3 id="replyTitle">车主正飞奔赶来</h3>
+      <p id="ownerReplyText" style="margin-top: 6px;">正在赶来！</p>
     </div>
 
     <div class="card action-card">
@@ -352,11 +386,40 @@
         reply: '等待车主回应...'
       });
 
+      document.getElementById('waitingCard').style.display = 'block';
+      document.getElementById('ownerFeedback').classList.add('hidden');
+
       renderRecords();
       evaluatePhoneEscalation();
       showToast('✅ 发送成功（模拟）！');
       document.getElementById('mainView').style.display = 'none';
       document.getElementById('successView').style.display = 'flex';
+    }
+
+    function simulateOwnerReply(replyText) {
+      if (records.length > 0) {
+        records[0].status = 'confirmed';
+        records[0].reply = replyText;
+      }
+      document.getElementById('waitingCard').style.display = 'none';
+      document.getElementById('ownerReplyText').innerText = replyText;
+
+      const emojiEl = document.getElementById('replyEmoji');
+      const titleEl = document.getElementById('replyTitle');
+      if (replyText.includes('飞奔而来')) {
+        emojiEl.innerText = '🏃‍♂️';
+        titleEl.innerText = '车主正飞奔赶来';
+      } else if (replyText.includes('换个角度')) {
+        emojiEl.innerText = '📷';
+        titleEl.innerText = '请重新拍摄现场照片';
+      } else {
+        emojiEl.innerText = '🛑';
+        titleEl.innerText = '车主反馈未挡道';
+      }
+
+      document.getElementById('ownerFeedback').classList.remove('hidden');
+      renderRecords();
+      showToast('📩 已模拟车主回复');
     }
 
     function handleRetryClick() {
