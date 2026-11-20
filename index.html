@@ -122,11 +122,13 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      transition: all 0.2s;
     }
-    #photoInput { display: none; }
+    .photo-btn:active { background: #bae6fd; }
+    .photo-upload-wrap input[type="file"] { display: none !important; }
     .photo-preview-text {
       font-size: 13px;
-      color: #e11d48;
+      color: #0369a1;
       font-weight: 500;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -137,6 +139,7 @@
       gap: clamp(6px, 2vw, 10px);
       padding: 0 clamp(12px, 3vw, 20px) clamp(14px, 3vw, 20px);
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
     }
     .tags::-webkit-scrollbar { display: none; }
@@ -167,6 +170,12 @@
       box-shadow: 0 10px 30px rgba(0, 147, 233, 0.35);
       min-height: 56px;
     }
+    .btn-main:active { transform: scale(0.98); }
+    .btn-main:disabled {
+      background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
     .toast {
       position: fixed;
       top: calc(20px + var(--sat));
@@ -193,6 +202,8 @@
     .success-icon { font-size: clamp(56px, 14vw, 80px); margin-bottom: 12px; display: block; }
     .success-card h2 { color: #155724; margin-bottom: 8px; font-size: clamp(20px, 5vw, 28px); }
     .success-card p { color: #1e7e34; font-size: clamp(14px, 3.5vw, 16px); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .loading-text { animation: pulse 1.5s ease-in-out infinite; }
     .waiting-tip {
       margin-top: 10px;
       font-size: 12px !important;
@@ -202,24 +213,52 @@
     }
     .owner-card { background: white; border: 2px solid #80D0C7; text-align: center; }
     .owner-card.hidden { display: none; }
+    .hidden { display: none !important; }
+    .retake-title { font-size: 15px; font-weight: 700; color: #1e293b; text-align: center; padding: 14px 16px 4px; }
+    .retake-sub { font-size: 12px; color: #64748b; text-align: center; padding: 0 16px 12px; }
     .owner-card h3 { color: #0093E9; margin-bottom: 6px; font-size: clamp(20px, 5vw, 26px); }
     .owner-card p { color: #475569; font-size: clamp(14px, 3.8vw, 16px); line-height: 1.4; padding: 0 8px; }
     .history-card { background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 18px; }
     .history-card h3 { font-size: 16px; color: #1e293b; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .refresh-btn {
+      background: #f1f5f9; border: none; border-radius: 50%;
+      width: 30px; height: 30px; font-size: 15px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #475569; flex-shrink: 0; transition: background 0.2s, transform 0.2s;
+    }
+    .refresh-btn:hover { background: #e2e8f0; }
+    .refresh-btn:active { transform: scale(0.9); }
+    @keyframes refreshSpin { to { transform: rotate(360deg); } }
+    .refresh-btn.refreshing > span { display: inline-block; animation: refreshSpin 0.8s linear infinite; }
+    .refresh-btn.refreshing { pointer-events: none; opacity: 0.7; }
     .history-list { display: flex; flex-direction: column; gap: 10px; }
-    .history-item { background: #f8fafc; border-radius: 12px; padding: 10px 12px; font-size: 13px; border-left: 3px solid #0093E9; display: flex; gap: 10px; align-items: center; }
+    .history-item { background: #f8fafc; border-radius: 12px; padding: 10px 12px; font-size: 13px; border-left: 3px solid #0093E9; display: flex; gap: 8px; align-items: center; }
     .history-thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
     .history-info { flex: 1; min-width: 0; }
     .history-time { color: #64748b; font-size: 11px; margin-bottom: 2px; }
     .history-msg { color: #334155; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .history-reply { color: #0284c7; font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* 车主最新回复专注展示（回复后 5 分钟内只显示这条回复），与 worker.js 行为一致 */
+    .reply-focus {
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdfa 100%);
+      border: 1.5px solid #bae6fd;
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .reply-focus .rf-badge { font-size: 11px; color: #0284c7; font-weight: 700; letter-spacing: 1px; }
+    .reply-focus .rf-emoji { font-size: 30px; display: block; margin: 8px 0 4px; }
+    .reply-focus .rf-text { font-size: 17px; font-weight: 700; color: #0f172a; margin: 4px 0 8px; line-height: 1.5; }
+    .reply-focus .rf-time { font-size: 12px; color: #64748b; }
+    .reply-focus .rf-hint { font-size: 11px; color: #94a3b8; margin-top: 10px; }
     .history-empty { text-align: center; color: #94a3b8; font-size: 13px; padding: 10px 0; }
     .load-more-btn {
       width: 100%; margin-top: 12px; padding: 10px; border-radius: 12px;
       background: #f1f5f9; color: #0284c7; border: 1px dashed #38bdf8;
       font-size: 13px; font-weight: 600; cursor: pointer; display: none;
-      align-items: center; justify-content: center; gap: 4px;
+      align-items: center; justify-content: center; gap: 4px; transition: all 0.2s;
     }
+    .load-more-btn:active { background: #e0f2fe; }
     .action-card { display: flex; flex-direction: column; gap: 10px; }
     .action-hint { text-align: center; font-size: 13px; color: #718096; display: none; }
     .action-hint.show { display: block; }
@@ -229,6 +268,7 @@
       align-items: center; justify-content: center; gap: 8px; text-decoration: none;
     }
     .btn-retry { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .btn-retry:disabled { opacity: 0.6; }
     .btn-back { background: #64748b; font-size: 15px; padding: 12px; }
     .btn-phone { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); display: none; }
     .btn-phone.show { display: flex; }
@@ -236,7 +276,7 @@
 
     .section-title { font-size: 13px; font-weight: 700; color: #475569; text-align: left; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
     .record-selector { display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 12px; }
-    .rec-item { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .rec-item { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 10px; }
     .rec-item.selected { background: #eef2ff; border-color: #6366f1; }
     .rec-thumb { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
     .rec-meta { flex: 1; min-width: 0; }
@@ -247,12 +287,22 @@
     .badge-done { background: #d1fae5; color: #065f46; }
     .rec-msg { font-size: 13px; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .message-box { background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: left; font-size: 14px; color: #475569; border-left: 4px solid #667eea; }
-    .photo-box { margin-bottom: 14px; border-radius: 12px; overflow: hidden; display: none; border: 1px solid #e2e8f0; }
+    .photo-box { margin-bottom: 14px; border-radius: 12px; overflow: hidden; display: none; border: 1px solid #e2e8f0; background: #eee; }
     .photo-box.show { display: block; }
     .photo-box img { width: 100%; height: auto; display: block; max-height: 220px; object-fit: cover; }
+    .photo-label {
+      font-size: 12px; font-weight: 700; color: #475569;
+      padding: 8px 10px 4px; text-align: left;
+    }
     .quick-replies { display: flex; gap: 8px; margin-bottom: 14px; }
     .qr-btn { flex: 1; padding: 10px 4px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; }
     .qr-btn.active { background: #e0e7ff; border-color: #6366f1; color: #4f46e5; }
+    .done-msg {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border-radius: 12px; padding: 12px; margin-bottom: 12px; display: none;
+    }
+    .done-msg.show { display: block; }
+    .done-msg p { color: #065f46; font-weight: 600; font-size: 13px; }
   </style>
 </head>
 <body>
@@ -270,15 +320,41 @@
       </div>
     </div>
 
+    <div class="history-card">
+      <h3>
+        <span>📋 今日挪车记录</span>
+        <span style="display:flex; align-items:center; gap:8px;">
+          <span id="historyCount" style="font-size:12px; font-weight:normal; color:#64748b;"></span>
+          <button id="refreshHistoryBtn" class="refresh-btn" onclick="refreshTodayRecords()" aria-label="刷新记录"><span>🔄</span></button>
+        </span>
+      </h3>
+      <div id="historyList" class="history-list">
+        <div class="history-empty">今日暂无挪车记录</div>
+      </div>
+      <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreRecords()">
+        <span>🔽 查看更多记录 (每次3条)</span>
+      </button>
+    </div>
+
     <div class="card input-card">
       <textarea id="msgInput" placeholder="输入留言给车主...（可选）"></textarea>
+
       <div class="photo-upload-wrap">
-        <button type="button" class="photo-btn" onclick="document.getElementById('photoInput').click()">
-          <span>📷</span> <span>拍摄/上传现场照片 *</span>
+        <button type="button" class="photo-btn" onclick="document.getElementById('photoInput1').click()">
+          <span>📷</span> <span>拍摄车头照片 *</span>
         </button>
-        <input type="file" id="photoInput" accept="image/*" capture="environment" onchange="handlePhotoSelect(this)" />
-        <span id="photoFileName" class="photo-preview-text">⚠️ 必须上传照片</span>
+        <input type="file" id="photoInput1" accept="image/*" capture="environment" onchange="handlePhotoSelect(this, 1)" />
+        <span id="photoFileName1" class="photo-preview-text" style="color:#e11d48">⚠️ 未上传</span>
       </div>
+
+      <div class="photo-upload-wrap">
+        <button type="button" class="photo-btn" onclick="document.getElementById('photoInput2').click()">
+          <span>📷</span> <span>拍摄车尾照片 *</span>
+        </button>
+        <input type="file" id="photoInput2" accept="image/*" capture="environment" onchange="handlePhotoSelect(this, 2)" />
+        <span id="photoFileName2" class="photo-preview-text" style="color:#e11d48">⚠️ 未上传</span>
+      </div>
+
       <div class="tags">
         <div class="tag" onclick="addTag('您的车挡住我了')">🚧 挡路</div>
         <div class="tag" onclick="addTag('临时停靠一下')">⏱️ 临停</div>
@@ -291,26 +367,13 @@
       <span>🔔</span>
       <span>一键通知车主</span>
     </button>
-
-    <div class="history-card">
-      <h3>
-        <span>📋 今日挪车记录</span>
-        <span id="historyCount" style="font-size:12px; font-weight:normal; color:#64748b;"></span>
-      </h3>
-      <div id="historyList" class="history-list">
-        <div class="history-empty">今日暂无挪车记录</div>
-      </div>
-      <button id="loadMoreBtn" class="load-more-btn" onclick="loadMoreRecords()">
-        <span>🔽 查看更多记录 (每次3条)</span>
-      </button>
-    </div>
   </div>
 
   <div class="container" id="successView">
     <div id="waitingCard" class="card success-card">
       <span class="success-icon">⏳</span>
       <h2>通知已发送！</h2>
-      <p>正在等待车主回应...</p>
+      <p class="loading-text">正在等待车主回应...</p>
       <p class="waiting-tip">若页面长时间未变化，可点击下方“模拟车主页”进行回复测试。</p>
     </div>
 
@@ -318,6 +381,27 @@
       <span id="replyEmoji" style="font-size:56px; display:block; margin-bottom:10px">🏃‍♂️</span>
       <h3 id="replyTitle">车主正飞奔赶来</h3>
       <p id="ownerReplyText" style="margin-top: 6px;">正在赶来！</p>
+    </div>
+
+    <div id="retakeCard" class="card input-card hidden">
+      <p class="retake-title">📷 车主看不清照片，请重新拍摄</p>
+      <p class="retake-sub">重新拍摄车头、车尾两张照片后才能再次通知车主</p>
+
+      <div class="photo-upload-wrap">
+        <button type="button" class="photo-btn" onclick="document.getElementById('photoInputR1').click()">
+          <span>📷</span> <span>拍摄车头照片 *</span>
+        </button>
+        <input type="file" id="photoInputR1" accept="image/*" capture="environment" onchange="handlePhotoSelect(this, 1, 'R')" />
+        <span id="photoFileNameR1" class="photo-preview-text" style="color:#e11d48">⚠️ 未上传</span>
+      </div>
+
+      <div class="photo-upload-wrap">
+        <button type="button" class="photo-btn" onclick="document.getElementById('photoInputR2').click()">
+          <span>📷</span> <span>拍摄车尾照片 *</span>
+        </button>
+        <input type="file" id="photoInputR2" accept="image/*" capture="environment" onchange="handlePhotoSelect(this, 2, 'R')" />
+        <span id="photoFileNameR2" class="photo-preview-text" style="color:#e11d48">⚠️ 未上传</span>
+      </div>
     </div>
 
     <div class="card action-card">
@@ -348,17 +432,31 @@
       </div>
 
       <div class="section-title">
-        <span>📋 当日申请记录</span>
-        <span id="ownerRecCount">0 条</span>
+        <span>📋 当日申请记录（点击选择）</span>
+        <span style="display:flex; align-items:center; gap:8px;">
+          <span id="ownerRecCount">0 条</span>
+          <button id="refreshOwnerBtn" class="refresh-btn" onclick="refreshOwnerRecords()" aria-label="刷新申请"><span>🔄</span></button>
+        </span>
       </div>
       <div id="ownerRecordSelector" class="record-selector"></div>
+      <button id="ownerLoadMoreBtn" class="load-more-btn" onclick="loadMoreOwnerRecords()" style="margin-top:0;margin-bottom:12px;">
+        <span>🔽 查看更多申请 (每次3条)</span>
+      </button>
 
       <div id="ownerDetailPanel" style="display:none;">
+        <div id="ownerDoneMsg" class="done-msg">
+          <p id="ownerDoneText">✅ 当前已回复</p>
+        </div>
         <div class="message-box">
           💬 <b>当前选中留言：</b><span id="ownerDetailMsg">无</span>
         </div>
-        <div id="ownerPhotoBox" class="photo-box">
-          <img id="ownerDetailPhoto" src="" alt="现场照片" />
+        <div id="ownerPhotoBox1" class="photo-box">
+          <div class="photo-label">🚗 车头</div>
+          <img id="ownerDetailPhoto1" src="" alt="车头照片" />
+        </div>
+        <div id="ownerPhotoBox2" class="photo-box">
+          <div class="photo-label">🚗 车尾</div>
+          <img id="ownerDetailPhoto2" src="" alt="车尾照片" />
         </div>
         <div class="quick-replies">
           <button type="button" class="qr-btn active" onclick="setOwnerReply(this, '抱歉挡了您的道，车主正飞奔而来，请稍后！')">🏃 马上</button>
@@ -377,12 +475,21 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'movecar_demo_records_v1';
+    const STORAGE_KEY = 'movecar_demo_records_v2';
+    const RETRY_COOLDOWN_KEY = 'movecar_demo_last_retry';
+    const RETRY_COOLDOWN_MS = 30 * 1000;          // 再次通知间隔 30 秒（与 worker.js 一致）
+    const NOTIFY_LOCK_MS = 60 * 1000;             // 最新记录 1 分钟内锁定“一键通知车主”按钮
+    const REPLY_FOCUS_MS = 5 * 60 * 1000;         // 车主最新回复 5 分钟内专注展示
     const SAMPLE_PHOTO = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80"><rect width="80" height="80" fill="#dbeafe"/><text x="40" y="46" font-size="24" text-anchor="middle">🚗</text></svg>');
-    let selectedPhotoFile = null;
-    let selectedPhotoDataUrl = SAMPLE_PHOTO;
+    let selectedPhotos = { 1: null, 2: null };    // 1=车头 2=车尾
+    let photoDataUrls = { 1: SAMPLE_PHOTO, 2: SAMPLE_PHOTO };
     let retryCount = 0;
     let visibleLimit = 3;
+    let ownerVisibleLimit = 3;
+    let lastRetryTime = 0;
+    let retryCooldownTimer = null;
+    let notifyLockTimer = null;
+    let replyFocusTimer = null;
     let records = loadStoredRecords();
     let selectedOwnerRecordId = records[0] ? records[0].id : null;
     let selectedOwnerReply = '抱歉挡了您的道，车主正飞奔而来，请稍后！';
@@ -405,9 +512,11 @@
     window.onload = () => {
       const params = new URLSearchParams(window.location.search);
       const viewParam = params.get('view') || (window.location.pathname.endsWith('/owner-confirm') ? 'owner' : 'main');
+      restoreRetryCooldown();
       renderRecords();
       renderOwnerView();
       evaluatePhoneEscalation();
+      updateNotifyLock();
       switchView(viewParam);
     };
 
@@ -422,6 +531,7 @@
       } else {
         renderRecords();
         evaluatePhoneEscalation();
+        updateNotifyLock();
         document.getElementById('mainView').style.display = 'flex';
       }
     }
@@ -430,12 +540,30 @@
       records = [];
       selectedOwnerRecordId = null;
       retryCount = 0;
-      saveStoredRecords();
-      document.getElementById('actionHint').classList.remove('show');
+      lastRetryTime = 0;
+      if (retryCooldownTimer) { clearInterval(retryCooldownTimer); retryCooldownTimer = null; }
+      if (notifyLockTimer) { clearInterval(notifyLockTimer); notifyLockTimer = null; }
+      if (replyFocusTimer) { clearTimeout(replyFocusTimer); replyFocusTimer = null; }
+      try { localStorage.removeItem(RETRY_COOLDOWN_KEY); } catch (e) {}
+      const hintEl = document.getElementById('actionHint');
+      hintEl.classList.remove('show');
       document.getElementById('phoneBtn').classList.remove('show');
+      const retryBtnEl = document.getElementById('retryBtn');
+      retryBtnEl.style.display = 'flex';
+      retryBtnEl.disabled = false;
+      retryBtnEl.style.opacity = '';
+      retryBtnEl.style.cursor = '';
+      retryBtnEl.innerHTML = '<span>🔔</span><span>再次通知</span>';
+      document.getElementById('retakeCard').classList.add('hidden');
+      document.getElementById('ownerFeedback').classList.add('hidden');
       renderRecords();
       renderOwnerView();
       showToast('🗑️ 已清空模拟记录');
+    }
+
+    // 是否为“车主要求重新拍摄”类回复（与 worker.js 判定一致）
+    function isRetakeReply(reply) {
+      return typeof reply === 'string' && (reply.includes('换个角度') || reply.includes('重新拍摄'));
     }
 
     function shouldUnlockPhoneButton(list) {
@@ -459,19 +587,81 @@
       }
     }
 
-    function handlePhotoSelect(input) {
-      const el = document.getElementById('photoFileName');
-      if (input.files && input.files[0]) {
-        selectedPhotoFile = input.files[0];
-        el.innerText = selectedPhotoFile.name;
-        el.style.color = '#059669';
-        const reader = new FileReader();
-        reader.onload = e => { selectedPhotoDataUrl = e.target.result; };
-        reader.readAsDataURL(selectedPhotoFile);
+    // 最新挪车记录 1 分钟内：锁定“一键通知车主”按钮防重复发送（刷新页面不失效）
+    // 例外：最新记录的回复是“请重新拍摄”类时，按钮不锁定，可直接再次通知
+    function updateNotifyLock() {
+      const btn = document.getElementById('notifyBtn');
+      if (notifyLockTimer) {
+        clearInterval(notifyLockTimer);
+        notifyLockTimer = null;
+      }
+      let latest = null;
+      for (const r of records) {
+        if (!latest || (r.createdAt || 0) > (latest.createdAt || 0)) latest = r;
+      }
+      if (latest && isRetakeReply(latest.reply)) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🔔</span><span>一键通知车主</span>';
+        return;
+      }
+      const remainMs = latest && latest.createdAt ? NOTIFY_LOCK_MS - (Date.now() - latest.createdAt) : 0;
+      if (remainMs > 0) {
+        let remainSec = Math.ceil(remainMs / 1000);
+        btn.disabled = true;
+        btn.innerHTML = `⏳ 刚刚已通知车主，${remainSec}s 后可再次通知`;
+        notifyLockTimer = setInterval(() => {
+          remainSec--;
+          if (remainSec <= 0) {
+            clearInterval(notifyLockTimer);
+            notifyLockTimer = null;
+            btn.disabled = false;
+            btn.innerHTML = '<span>🔔</span><span>一键通知车主</span>';
+          } else {
+            btn.innerHTML = `⏳ 刚刚已通知车主，${remainSec}s 后可再次通知`;
+          }
+        }, 1000);
       } else {
-        selectedPhotoFile = null;
-        el.innerText = '⚠️ 必须上传照片';
-        el.style.color = '#e11d48';
+        btn.disabled = false;
+        btn.innerHTML = '<span>🔔</span><span>一键通知车主</span>';
+      }
+    }
+
+    // 刷新/重新打开页面后，恢复“再次通知”的 30 秒冷却剩余时间
+    function restoreRetryCooldown() {
+      const saved = parseInt(localStorage.getItem(RETRY_COOLDOWN_KEY) || '0', 10);
+      if (!saved) return;
+      lastRetryTime = saved;
+      const remainMs = saved + RETRY_COOLDOWN_MS - Date.now();
+      if (remainMs > 0) {
+        startRetryCooldown(Math.ceil(remainMs / 1000));
+      }
+    }
+
+    function handlePhotoSelect(input, idx, suffix) {
+      suffix = suffix || '';
+      const el = document.getElementById('photoFileName' + suffix + idx);
+      // 重拍区选择时，同步更新申请页对应状态显示
+      const mainEl = suffix ? document.getElementById('photoFileName' + idx) : null;
+      if (input.files && input.files[0]) {
+        selectedPhotos[idx] = input.files[0];
+        const reader = new FileReader();
+        reader.onload = e => { photoDataUrls[idx] = e.target.result; };
+        reader.readAsDataURL(selectedPhotos[idx]);
+        if (el) { el.innerText = selectedPhotos[idx].name; el.style.color = '#059669'; }
+        if (mainEl) { mainEl.innerText = selectedPhotos[idx].name; mainEl.style.color = '#059669'; }
+      } else {
+        selectedPhotos[idx] = null;
+        photoDataUrls[idx] = SAMPLE_PHOTO;
+        if (el) { el.innerText = '⚠️ 未上传'; el.style.color = '#e11d48'; }
+        if (mainEl) { mainEl.innerText = '⚠️ 未上传'; mainEl.style.color = '#e11d48'; }
+      }
+    }
+
+    // 重置指定区（''=申请页，'R'=重拍区）的照片状态显示
+    function resetPhotoLabels(suffix) {
+      for (const idx of [1, 2]) {
+        const el = document.getElementById('photoFileName' + suffix + idx);
+        if (el) { el.innerText = '⚠️ 未上传'; el.style.color = '#e11d48'; }
       }
     }
 
@@ -480,19 +670,20 @@
     }
 
     function sendNotify() {
-      if (!selectedPhotoFile) {
-        showToast('❌ 请先拍摄或选择现场照片！');
+      if (!selectedPhotos[1] || !selectedPhotos[2]) {
+        showToast('❌ 请分别拍摄车头和车尾两张照片！');
         return;
       }
       const nowMs = Date.now();
       const timeStr = new Date(nowMs).toLocaleTimeString('zh-CN', { hour12: false });
       const msg = document.getElementById('msgInput').value.trim() || '无留言';
       const newRec = {
-        id: `${nowMs}_${Math.random().toString(36).slice(2, 7)}`,
+        id: `${nowMs}_${Math.random().toString(36).slice(2, 8)}`,
         createdAt: nowMs,
         time: timeStr,
         message: msg,
-        photo: selectedPhotoDataUrl,
+        photo: photoDataUrls[1],                          // 兼容旧结构：车头图
+        photos: [photoDataUrls[1], photoDataUrls[2]],     // [车头, 车尾]，与 worker.js 记录结构一致
         status: 'waiting',
         reply: '等待车主回应...'
       };
@@ -501,25 +692,123 @@
       selectedOwnerRecordId = newRec.id;
       saveStoredRecords();
 
-      document.getElementById('waitingCard').style.display = 'block';
+      document.getElementById('waitingCard').style.display = '';
       document.getElementById('ownerFeedback').classList.add('hidden');
 
       renderRecords();
       renderOwnerView();
       evaluatePhoneEscalation();
+      updateNotifyLock();
       showToast('✅ 发送成功（模拟）！');
       document.getElementById('mainView').style.display = 'none';
       document.getElementById('successView').style.display = 'flex';
     }
 
+    // 手动刷新今日挪车记录（重置分页，转圈反馈）
+    let isRefreshingHistory = false;
+    function refreshTodayRecords() {
+      if (isRefreshingHistory) return;
+      isRefreshingHistory = true;
+      const btn = document.getElementById('refreshHistoryBtn');
+      btn.classList.add('refreshing');
+      visibleLimit = 3;
+      setTimeout(() => {
+        renderRecords();
+        evaluatePhoneEscalation();
+        updateNotifyLock();
+        btn.classList.remove('refreshing');
+        isRefreshingHistory = false;
+        showToast('🔄 已更新最新记录');
+      }, 400);
+    }
+
+    // 车主回复后 5 分钟内：申请页专注展示最新回复，超过 5 分钟恢复正常列表
+    function getFocusedReply() {
+      let latest = null;
+      for (const r of records) {
+        if (r.status === 'confirmed' && r.reply && r.confirmedAt) {
+          if (!latest || r.confirmedAt > latest.confirmedAt) latest = r;
+        }
+      }
+      if (latest && Date.now() - latest.confirmedAt < REPLY_FOCUS_MS) return latest;
+      return null;
+    }
+
+    function renderRecords() {
+      const listEl = document.getElementById('historyList');
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      if (replyFocusTimer) { clearTimeout(replyFocusTimer); replyFocusTimer = null; }
+      document.getElementById('historyCount').innerText = records.length > 0 ? `共 ${records.length} 条` : '';
+
+      if (records.length === 0) {
+        listEl.innerHTML = '<div class="history-empty">今日暂无挪车记录</div>';
+        loadMoreBtn.style.display = 'none';
+        return;
+      }
+
+      // 5 分钟内有车主回复：只显示最新回复内容（隐藏其余记录和查看更多）
+      const focus = getFocusedReply();
+      if (focus) {
+        listEl.innerHTML = `
+          <div class="reply-focus">
+            <div class="rf-badge">—— 车主最新回复 ——</div>
+            <span class="rf-emoji">💬</span>
+            <div class="rf-text">${escapeHtml(focus.reply)}</div>
+            <div class="rf-time">回复时间 ${new Date(focus.confirmedAt).toLocaleTimeString('zh-CN', { hour12: false })}</div>
+            <div class="rf-hint">⏱ 专注展示中，稍后自动恢复完整记录列表</div>
+          </div>`;
+        loadMoreBtn.style.display = 'none';
+        // 时间窗口过期后自动切回正常列表
+        const remainMs = REPLY_FOCUS_MS - (Date.now() - focus.confirmedAt);
+        replyFocusTimer = setTimeout(renderRecords, remainMs + 500);
+        return;
+      }
+
+      const showRecords = records.slice(0, visibleLimit);
+      listEl.innerHTML = showRecords.map(r => `
+        <div class="history-item">
+          ${((r.photos && r.photos.length ? r.photos : [r.photo]).filter(Boolean)).map(p => `<img src="${p}" class="history-thumb" alt="照片" />`).join('')}
+          <div class="history-info">
+            <div class="history-time">${r.time}</div>
+            <div class="history-msg">💬 ${escapeHtml(r.message || '无留言')}</div>
+            <div class="history-reply">👉 ${escapeHtml(r.reply)}</div>
+          </div>
+        </div>
+      `).join('');
+
+      loadMoreBtn.style.display = records.length > visibleLimit ? 'flex' : 'none';
+    }
+
+    function loadMoreRecords() {
+      visibleLimit += 3;
+      renderRecords();
+    }
+
+    let isRefreshingOwner = false;
+    function refreshOwnerRecords() {
+      if (isRefreshingOwner) return;
+      isRefreshingOwner = true;
+      const btn = document.getElementById('refreshOwnerBtn');
+      btn.classList.add('refreshing');
+      ownerVisibleLimit = 3;
+      setTimeout(() => {
+        renderOwnerView();
+        btn.classList.remove('refreshing');
+        isRefreshingOwner = false;
+        showToast('🔄 已更新最新申请');
+      }, 400);
+    }
+
     function renderOwnerView() {
       const selectorEl = document.getElementById('ownerRecordSelector');
+      const ownerLoadMoreBtn = document.getElementById('ownerLoadMoreBtn');
       const detailPanel = document.getElementById('ownerDetailPanel');
       document.getElementById('ownerRecCount').innerText = records.length + ' 条';
 
       if (records.length === 0) {
         selectorEl.innerHTML = '<div class="history-empty">暂无模拟申请记录，请先在申请页提交</div>';
         detailPanel.style.display = 'none';
+        ownerLoadMoreBtn.style.display = 'none';
         return;
       }
 
@@ -528,35 +817,65 @@
       }
 
       detailPanel.style.display = 'block';
-      selectorEl.innerHTML = records.map(r => {
+      const showRecords = records.slice(0, ownerVisibleLimit);
+      selectorEl.innerHTML = showRecords.map(r => {
         const isSelected = r.id === selectedOwnerRecordId;
         const isDone = r.status === 'confirmed';
         return `
           <div class="rec-item ${isSelected ? 'selected' : ''}" onclick="selectOwnerRecord('${r.id}')">
-            <img src="${r.photo}" class="rec-thumb" alt="照片" />
+            <img src="${(r.photos && r.photos[0]) || r.photo}" class="rec-thumb" alt="照片" />
             <div class="rec-meta">
               <div class="rec-top">
                 <span class="rec-time">⏱️ ${r.time}</span>
                 <span class="rec-badge ${isDone ? 'badge-done' : 'badge-wait'}">${isDone ? '已回复' : '待回复'}</span>
               </div>
-              <div class="rec-msg">💬 ${escapeHtml(r.message)}</div>
+              <div class="rec-msg">💬 ${escapeHtml(r.message || '无留言')}</div>
             </div>
           </div>
         `;
       }).join('');
 
-      const cur = records.find(r => r.id === selectedOwnerRecordId);
-      if (cur) {
-        document.getElementById('ownerDetailMsg').innerText = cur.message;
-        const photoBox = document.getElementById('ownerPhotoBox');
-        const imgEl = document.getElementById('ownerDetailPhoto');
-        if (cur.photo) {
-          imgEl.src = cur.photo;
-          photoBox.classList.add('show');
-        } else {
-          photoBox.classList.remove('show');
-        }
+      ownerLoadMoreBtn.style.display = records.length > ownerVisibleLimit ? 'flex' : 'none';
+
+      syncOwnerDetail();
+    }
+
+    function syncOwnerDetail() {
+      const rec = records.find(r => r.id === selectedOwnerRecordId);
+      if (!rec) return;
+
+      document.getElementById('ownerDetailMsg').innerText = rec.message || '无留言';
+      // 兼容旧记录：photos 数组为 [车头, 车尾]，旧记录只有 photo 单张
+      const photos = ((rec.photos && rec.photos.length ? rec.photos : [rec.photo]) || []).filter(Boolean);
+      const box1 = document.getElementById('ownerPhotoBox1');
+      const box2 = document.getElementById('ownerPhotoBox2');
+      const sp1 = document.getElementById('ownerDetailPhoto1');
+      const sp2 = document.getElementById('ownerDetailPhoto2');
+      if (photos[0]) {
+        sp1.src = photos[0];
+        box1.classList.add('show');
+      } else {
+        box1.classList.remove('show');
       }
+      if (photos[1]) {
+        sp2.src = photos[1];
+        box2.classList.add('show');
+      } else {
+        box2.classList.remove('show');
+      }
+
+      const doneMsg = document.getElementById('ownerDoneMsg');
+      if (rec.status === 'confirmed' && rec.reply) {
+        document.getElementById('ownerDoneText').innerText = '✅ 当前已回复：' + rec.reply;
+        doneMsg.classList.add('show');
+      } else {
+        doneMsg.classList.remove('show');
+      }
+    }
+
+    function loadMoreOwnerRecords() {
+      ownerVisibleLimit += 3;
+      renderOwnerView();
     }
 
     function selectOwnerRecord(id) {
@@ -576,10 +895,12 @@
 
       records[idx].status = 'confirmed';
       records[idx].reply = selectedOwnerReply;
+      records[idx].confirmedAt = Date.now();  // 回复时间戳：申请页 5 分钟内专注展示该回复
       saveStoredRecords();
       renderOwnerView();
       renderRecords();
 
+      // 模拟 worker.js 轮询到 confirmed 后的处理逻辑
       document.getElementById('waitingCard').style.display = 'none';
       document.getElementById('ownerReplyText').innerText = selectedOwnerReply;
       const emojiEl = document.getElementById('replyEmoji');
@@ -587,7 +908,7 @@
       if (selectedOwnerReply.includes('飞奔而来')) {
         emojiEl.innerText = '🏃‍♂️';
         titleEl.innerText = '车主正飞奔赶来';
-      } else if (selectedOwnerReply.includes('换个角度')) {
+      } else if (isRetakeReply(selectedOwnerReply)) {
         emojiEl.innerText = '📷';
         titleEl.innerText = '请重新拍摄现场照片';
       } else {
@@ -595,55 +916,96 @@
         titleEl.innerText = '车主反馈未挡道';
       }
       document.getElementById('ownerFeedback').classList.remove('hidden');
+
+      // 车主已回复：按回复内容决定“再次通知”按钮状态（与 worker.js 一致）
+      const retryBtnEl = document.getElementById('retryBtn');
+      if (retryCooldownTimer) {
+        clearInterval(retryCooldownTimer);
+        retryCooldownTimer = null;
+      }
+      if (isRetakeReply(selectedOwnerReply)) {
+        // 车主要求重新拍摄：清空已选照片，显示重新上传区，未重拍不能再次通知
+        selectedPhotos = { 1: null, 2: null };
+        document.getElementById('photoInput1').value = '';
+        document.getElementById('photoInput2').value = '';
+        resetPhotoLabels('');
+        resetPhotoLabels('R');
+        document.getElementById('retakeCard').classList.remove('hidden');
+        retryBtnEl.style.display = 'flex';
+        retryBtnEl.disabled = false;
+        retryBtnEl.style.opacity = '';
+        retryBtnEl.style.cursor = '';
+        retryBtnEl.innerHTML = '<span>📷</span><span>重新拍照并通知车主</span>';
+        showToast('📷 车主看不清照片，请重新拍摄车头和车尾照片');
+      } else {
+        // 其他回复：不提供再次通知入口，避免重复催促
+        document.getElementById('retakeCard').classList.add('hidden');
+        retryBtnEl.style.display = 'none';
+      }
+      document.getElementById('actionHint').classList.remove('show');
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
       showToast('✅ 已发送模拟回复');
     }
 
     function handleRetryClick() {
+      // 未上传照片时禁止再次通知（车主要求重拍后必须先重新拍摄）
+      if (!selectedPhotos[1] || !selectedPhotos[2]) {
+        showToast('❌ 请先重新拍摄车头和车尾两张照片！');
+        return;
+      }
+      // 冷却检查：距离上次点击不足 30 秒则拦截
+      if (Date.now() - lastRetryTime < RETRY_COOLDOWN_MS) {
+        const remainSec = Math.ceil((RETRY_COOLDOWN_MS - (Date.now() - lastRetryTime)) / 1000);
+        showToast(`⏳ 通知太频繁，请等待 ${remainSec} 秒后再试`);
+        return;
+      }
+
+      lastRetryTime = Date.now();
+      localStorage.setItem(RETRY_COOLDOWN_KEY, String(lastRetryTime));
+      startRetryCooldown();
+
       retryCount++;
       if (retryCount >= 3) {
+        document.getElementById('actionHint').classList.add('show');
+        document.getElementById('phoneBtn').classList.add('show');
         showToast('📞 已解锁直接打电话选项');
       } else {
         showToast(`🔔 已再次通知 (${retryCount}/3)`);
       }
-      evaluatePhoneEscalation();
+      sendNotify();
+    }
+
+    // 再次通知按钮 30 秒冷却倒计时（initSec 可选：页面刷新后恢复剩余秒数）
+    function startRetryCooldown(initSec) {
+      const btn = document.getElementById('retryBtn');
+      if (retryCooldownTimer) clearInterval(retryCooldownTimer);
+      let remainSec = initSec && initSec > 0 ? initSec : Math.ceil(RETRY_COOLDOWN_MS / 1000);
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      btn.style.cursor = 'not-allowed';
+      btn.innerHTML = `⏳ 再次通知 (${remainSec}s)`;
+      retryCooldownTimer = setInterval(() => {
+        remainSec--;
+        if (remainSec <= 0) {
+          clearInterval(retryCooldownTimer);
+          retryCooldownTimer = null;
+          btn.disabled = false;
+          btn.style.opacity = '';
+          btn.style.cursor = '';
+          btn.innerHTML = '<span>🔔</span><span>再次通知</span>';
+        } else {
+          btn.innerHTML = `⏳ 再次通知 (${remainSec}s)`;
+        }
+      }, 1000);
     }
 
     function backToMainView() {
       document.getElementById('successView').style.display = 'none';
       document.getElementById('mainView').style.display = 'flex';
+      // 锁定状态由 renderRecords → updateNotifyLock 按最新记录时间计算，刷新页面也不失效
       renderRecords();
       evaluatePhoneEscalation();
-    }
-
-    function renderRecords() {
-      const listEl = document.getElementById('historyList');
-      const loadMoreBtn = document.getElementById('loadMoreBtn');
-      document.getElementById('historyCount').innerText = records.length > 0 ? `共 ${records.length} 条` : '';
-
-      if (records.length === 0) {
-        listEl.innerHTML = '<div class="history-empty">今日暂无挪车记录</div>';
-        loadMoreBtn.style.display = 'none';
-        return;
-      }
-
-      const showRecords = records.slice(0, visibleLimit);
-      listEl.innerHTML = showRecords.map(r => `
-        <div class="history-item">
-          <img src="${r.photo}" class="history-thumb" alt="照片" />
-          <div class="history-info">
-            <div class="history-time">${r.time}</div>
-            <div class="history-msg">💬 ${escapeHtml(r.message)}</div>
-            <div class="history-reply">👉 ${escapeHtml(r.reply)}</div>
-          </div>
-        </div>
-      `).join('');
-
-      loadMoreBtn.style.display = records.length > visibleLimit ? 'flex' : 'none';
-    }
-
-    function loadMoreRecords() {
-      visibleLimit += 3;
-      renderRecords();
+      updateNotifyLock();
     }
 
     function showToast(text) {
